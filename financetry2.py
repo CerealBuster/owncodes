@@ -1,4 +1,5 @@
 '''Finance Try2
+   jetzt sogar auf git
 '''
 
 import urllib.request
