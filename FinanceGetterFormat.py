@@ -90,6 +90,8 @@ def clearScreen():
         os.system('clear')
     elif(sys.platform == 'windows'):
         os.system('cls')
+    elif(sys.platform == 'win32'):
+        os.system('cls')
     else:
         pass
     
