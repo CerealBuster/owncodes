@@ -118,11 +118,11 @@ class Action:
 
 
 
-def main(inputOperation):
+def main(inputOperation,mode):
 
     band = []
 
-    for i in range(50):
+    for i in range(80):
         band.append('_')
 
     #inputString = '111_111'
@@ -175,26 +175,42 @@ def main(inputOperation):
     magnetKopf = MagnetKopf(band,14)
 
     currentState = z0
-
+    anzSchritte = 0
+    
     while(not currentState.isFinalState()):
-
+        
         symbol = magnetKopf.readFromBand()
-
+        
         currentState.getActiveAction(symbol)
 
-        currentState.protocol()
+        #currentState.protocol()
 
         magnetKopf.writeToBand(currentState.getWriteValue())
 
         magnetKopf.moveTo(currentState.getBewegung())
-
+        anzSchritte += 1
+        if (mode == 's'):
+            print("\n------------------------------------------------------")
+            #print("Gelesenes Symbol:     ", symbol)
+            #print("Geschriebenes Symbol: ",currentState.getWriteValue())
+            #print("Aktueller Zustand:    ", currentState.getName())
+            #print("Wechsle in Zustand:   ", currentState.getNextZustand())
+            currentState.protocol()
+            print("Anzahl Schritte: ",anzSchritte)
+            print("\n------------------------------------------------------")
+            s = input('hit enter to continue or e for leaving stepmode\n>>> ')
+            if s == 'e':
+                mode = 'e'
+                
         currentState = currentState.getNextZustand()
+
         
 
     stringBand = ''
     for i in band:
         stringBand += i
 
-    print (stringBand)
+    print ("\n",stringBand)
+    print("\nBenötigte Schritte: ", anzSchritte)
 
-main('111_1111111')
+main('111_1111111','s')
