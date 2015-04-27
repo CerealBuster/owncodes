@@ -1,10 +1,18 @@
 '''python Turing Maschine
 '''
+
+import os
+import sys
+
 class MagnetKopf:
 
     def __init__(self,band,position):
         self.band = band
         self.position=position
+        self.positionBand = []
+        for i in range(len(band)):
+            self.positionBand.append(" ")
+        
 
     def moveTo(self,direction):
         if direction == 'r':
@@ -19,6 +27,19 @@ class MagnetKopf:
 
     def readFromBand(self):
         return self.band[self.position]
+    
+    def printPosition(self):
+        self.positionBand[self.position] = "#"
+        positionString =""
+        for i in self.positionBand:
+            positionString += i
+        print(positionString)
+        positionString = ""
+        for i in self.band:
+            positionString += i
+        print(positionString)
+        self.positionBand[self.position] = " "
+        
 
 class Zustand:
     '''Definiert einen Zustand
@@ -118,6 +139,19 @@ class Action:
 
 
 
+def clearScreen():
+    """
+    Loescht die Konsolenausgabe 
+    """
+    if (sys.platform == 'linux'):
+        os.system('clear')
+    elif(sys.platform == 'windows'):
+        os.system('cls')
+    elif(sys.platform == 'win32'):
+        os.system('cls')
+    else:
+        pass
+
 def main(inputOperation,mode):
 
     band = []
@@ -183,24 +217,21 @@ def main(inputOperation,mode):
         
         currentState.getActiveAction(symbol)
 
-        #currentState.protocol()
-
         magnetKopf.writeToBand(currentState.getWriteValue())
 
         magnetKopf.moveTo(currentState.getBewegung())
         anzSchritte += 1
         if (mode == 's'):
             print("\n------------------------------------------------------")
-            #print("Gelesenes Symbol:     ", symbol)
-            #print("Geschriebenes Symbol: ",currentState.getWriteValue())
-            #print("Aktueller Zustand:    ", currentState.getName())
-            #print("Wechsle in Zustand:   ", currentState.getNextZustand())
             currentState.protocol()
+            magnetKopf.printPosition()
             print("Anzahl Schritte: ",anzSchritte)
             print("\n------------------------------------------------------")
             s = input('hit enter to continue or e for leaving stepmode\n>>> ')
             if s == 'e':
                 mode = 'e'
+            clearScreen()
+            
                 
         currentState = currentState.getNextZustand()
 
@@ -213,4 +244,9 @@ def main(inputOperation,mode):
     print ("\n",stringBand)
     print("\nBenötigte Schritte: ", anzSchritte)
 
-main('111_1111111','s')
+if __name__ == "__main__":
+    inputOperation = input("\nBitte Operation eingeben: ")
+    mode = input("Bitte modus Eingeben: ")
+    clearScreen()
+    main(inputOperation, mode)
+#main('111_1111111','s')
